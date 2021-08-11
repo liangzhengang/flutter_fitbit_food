@@ -11,16 +11,16 @@ class Strings {
   static const String fitbitSettingsScreenName = "Fitbit Account";
 
   // Fitbit Client ID
-  static const String fitbitClientID = 'XXX';
+  static const String fitbitClientID = '23B7J5';
 
   // Fitbit Client Secret
-  static const String fitbitClientSecret = 'XXX';
+  static const String fitbitClientSecret = '6912e12752f7b7d1eeaac895cc1be4d1';
 
   /// Auth Uri
-  static const String fitbitRedirectUri = 'XXX';
+  static const String fitbitRedirectUri = 'nutribalan://home';
 
   /// Callback scheme
-  static const String fitbitCallbackScheme = 'XXX';
+  static const String fitbitCallbackScheme = 'nutribalan';
 
   // Placeholders
   static const String hello = "Hello, World!";
