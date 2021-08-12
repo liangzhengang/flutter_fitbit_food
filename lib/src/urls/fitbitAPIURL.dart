@@ -7,6 +7,7 @@ abstract class FitbitAPIURL {
   /// The id of the user requesting for the data.
   String? userID;
 
+
   /// Default [FitbitAPIURL] constructor.
   FitbitAPIURL({this.url, this.userID});
 } // FitbitAPIURL

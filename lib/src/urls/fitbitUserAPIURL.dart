@@ -23,3 +23,4 @@ class FitbitUserAPIURL extends FitbitAPIURL {
   } // _getBaseURL
 
 } // FitbitUserAPIURL
+typedef ValueChanged<T>= void Function([T value]);

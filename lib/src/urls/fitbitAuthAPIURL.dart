@@ -7,6 +7,7 @@ import 'package:fitbitter/src/urls/fitbitAPIURL.dart';
 /// [FitbitAuthAPIURL] is a class that expresses multiple factory
 /// constructors to be used to generate Fitbit Web APIs urls to
 /// be used by [FitbitConnector].
+
 class FitbitAuthAPIURL extends FitbitAPIURL {
   /// The data to be attached to the url.
   String? data;
@@ -56,7 +57,7 @@ class FitbitAuthAPIURL extends FitbitAPIURL {
 
     return FitbitAuthAPIURL(
       url:
-          'https://www.fitbit.com/oauth2/authorize?response_type=code&client_id=$clientID&redirect_uri=$encodedRedirectUri&scope=activity%20heartrate%20location%20nutrition%20profile%20settings%20sleep%20social%20weight&expires_in=604800',
+          'https://www.fitbit.com/oauth2/authorize?response_type=code&client_id=$clientID&redirect_uri=$encodedRedirectUri&scope=nutrition&expires_in=604800',
       userID: userID,
       data: null,
       authorizationHeader: null,

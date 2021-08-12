@@ -1,9 +1,14 @@
 import 'package:fitbitter_example/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:fitbitter/fitbitter.dart';
+
+import 'package:shared_preferences/shared_preferences.dart';
+
 void main() {
   runApp(const MyApp());
 }
+
+typedef ValueChanged<T> = Widget Function({T value});
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -71,11 +76,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-
-
-
-
-
+    SharedPreferences.getInstance().then((value) {
+      FitbitConnector.init(value);
+    });
     return Scaffold(
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
@@ -109,6 +112,21 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headline4,
             ),
+            BackButton(
+              onPressed: () async {
+                // await FitbitConnector.refreshToken(
+                //   clientID: Strings.fitbitClientID,
+                //   clientSecret: Strings.fitbitClientSecret,
+                // );
+
+                // await FitbitConnector.unauthorize(
+                //   clientID: Strings.fitbitClientID,
+                //   clientSecret: Strings.fitbitClientSecret,
+                // );
+                var data=FoodReq("apple",1,147,100,"2021-08-12");
+                await FitbitFoodDataManager(data).fetch(FitbitFoodAPIURL.logFood());
+              },
+            )
           ],
         ),
       ),

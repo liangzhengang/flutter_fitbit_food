@@ -6,7 +6,6 @@ import 'package:flutter_web_auth/flutter_web_auth.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'package:fitbitter/src/urls/fitbitAuthAPIURL.dart';
 
 /// [FitbitConnector] is a class that is in charge of managing the connection authorization
@@ -29,11 +28,11 @@ class FitbitConnector {
 
   /// Method that refreshes the Fitbit access token.
   static Future<void> refreshToken(
-      {String? userID, String? clientID, String? clientSecret}) async {
+      {String? clientID, String? clientSecret}) async {
     // Instantiate Dio and its Response
     Dio dio = Dio();
     Response response;
-
+    String? userID = GetIt.instance<SharedPreferences>().getString("user_id");
     // Generate the fitbit url
     final fitbitUrl = FitbitAuthAPIURL.refreshToken(
         userID: userID, clientID: clientID, clientSecret: clientSecret);
@@ -98,6 +97,13 @@ class FitbitConnector {
     return response.data['active'] as bool;
   } // isTokenValid
 
+  static Future init(SharedPreferences gPrefs) async {
+    GetIt sl = GetIt.instance;
+    if (!sl.isRegistered<SharedPreferences>()) {
+      sl.registerSingleton<SharedPreferences>(gPrefs);
+    }
+  }
+
   /// Method that implements the OAuth 2.0 protocol and gets (and retain)
   /// in the [SharedPreferences] the access and refresh tokens from Fitbit APIs.
   static Future<String?> authorize(
@@ -151,7 +157,7 @@ class FitbitConnector {
       final accessToken = response.data['access_token'] as String;
       final refreshToken = response.data['refresh_token'] as String;
       userID = response.data['user_id'] as String?;
-
+      GetIt.instance<SharedPreferences>().setString('user_id', userID ?? "");
       GetIt.instance<SharedPreferences>()
           .setString('fitbitAccessToken', accessToken);
       GetIt.instance<SharedPreferences>()
@@ -193,10 +199,11 @@ class FitbitConnector {
       // Debugging
       final logger = Logger();
       logger.i('$response');
-
+      GetIt sl = GetIt.instance;
       // Remove the tokens from shared preferences
-      GetIt.instance<SharedPreferences>().remove('fitbitAccessToken');
-      GetIt.instance<SharedPreferences>().remove('fitbitRefreshToken');
+      sl.get<SharedPreferences>().remove('fitbitAccessToken');
+      sl.get<SharedPreferences>().remove('fitbitRefreshToken');
+      sl.get<SharedPreferences>().remove('user_id');
     } catch (e) {
       print(e);
     } // catch

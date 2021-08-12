@@ -30,7 +30,33 @@ abstract class FitbitDataManager {
   FitbitDataManager({this.clientID, this.clientSecret});
 
   /// Method that fetches data from the Fitbit API.
-  Future<List<FitbitData>> fetch(FitbitAPIURL url);
+  Future<dynamic> fetch(FitbitAPIURL url);
+
+  Future<dynamic> postResponse(
+      FitbitAPIURL fitbitUrl, Map<String, dynamic> params) async {
+    await _checkAccessToken(fitbitUrl);
+    Dio dio = Dio();
+    late Response response;
+    try {
+      response = await dio.post(fitbitUrl.url!,
+          options: Options(
+            contentType: Headers.formUrlEncodedContentType,
+            headers: {
+              'Authorization':
+                  'Bearer ${GetIt.instance<SharedPreferences>().getString("fitbitAccessToken")}',
+            },
+          ),
+          queryParameters: params);
+    } on DioError catch (e) {
+      FitbitDataManager.manageError(e);
+      print(e);
+
+    }
+    final decodedResponse =
+        response.data is String ? jsonDecode(response.data) : response.data;
+
+    return decodedResponse;
+  }
 
   /// Method the obtains the response from the given [FitbitAPIURL].
   Future<dynamic> getResponse(FitbitAPIURL fitbitUrl) async {
@@ -69,7 +95,6 @@ abstract class FitbitDataManager {
     //check if the access token is stil valid, if not refresh it
     if (!await (FitbitConnector.isTokenValid())) {
       await FitbitConnector.refreshToken(
-          userID: fitbitUrl.userID,
           clientID: clientID,
           clientSecret: clientSecret);
     } // if
